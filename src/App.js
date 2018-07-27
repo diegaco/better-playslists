@@ -1,21 +1,61 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
+
+const textColor = '#fff';
+const defaultStyle = {
+  color: textColor
+}
+
+class Aggregate extends Component {
+  render() {
+    return (
+      <div className="aggregate" style={{...defaultStyle, width: '40%', display: 'inline-block'}}>
+        <h2>Number Text</h2>
+      </div>
+    );
+  }
+}
+
+class Filter extends Component {
+  render() {
+    return (
+      <div style={defaultStyle}>
+        <img />
+        <input type="text" />
+        Filter
+      </div>
+    );
+  }
+}
+
+class Playlist extends Component {
+  render() {
+    return (
+      <div style={{ ...defaultStyle, display: 'inline-block', width: '25%'}}>
+        <img src="" alt=""/>
+        <h3>Playlist Name</h3>
+        <ul>
+          <li>Song 1</li>
+          <li>Song 2</li>
+          <li>Song 3</li>
+        </ul>
+      </div>
+    );
+  }
+}
 
 class App extends Component {
   render() {
-    let name = 'Diego';
-    let headerStyle = {color: '#d5d5d5'};
     return (
       <div className="App">
         <h1>Title</h1>
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 style={headerStyle} className="App-title">Hello, {name}</h1>
-        </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
+        <Aggregate/>
+        <Aggregate/>
+        <Filter />
+        <Playlist />
+        <Playlist />
+        <Playlist />
+        <Playlist />
       </div>
     );
   }
