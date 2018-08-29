@@ -47,7 +47,7 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <h1 style={{...defaultStyle, 'font-size': '54px'}}>Title</h1>
+        <h1 style={{...defaultStyle, fontSize: '54px'}} class="App-title">Title</h1>
         <Aggregate/>
         <Aggregate/>
         <Filter />
