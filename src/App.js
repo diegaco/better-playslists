@@ -7,7 +7,21 @@ const defaultStyle = {
 
 const fakeServerData = {
   user: {
-    name: 'Diego'
+    name: 'Diego',
+    playlists: [
+      {
+        name: 'Top 50 Uruguay',
+        songs: []
+      },
+      {
+        name: 'Rock Nacional Argentino',
+        songs: []
+      },
+      {
+        name: 'Cumbia Cheta',
+        songs: []
+      }
+    ]
   }
 }
 
