@@ -11,19 +11,35 @@ const fakeServerData = {
     playlists: [
       {
         name: "Top 50 Uruguay",
-        songs: ["Vaina Loca", "Cuando Te Besé", "No Es Justo"]
+        songs: [
+          { name: "Vaina Loca", duration: 1345 },
+          { name: "Cuando Te Besé", duration: 2345 },
+          { name: "No Es Justo", duration: 3456 }
+        ]
       },
       {
         name: "Rock Nacional Argentino",
-        songs: ["Juguetes Perdidos", "Mirenla", "Persiana Americana"]
+        songs: [
+          { name: "Juguetes Perdidos", duration: 2534 },
+          { name: "Mirenla", duration: 4025 },
+          { name: "Persiana Americana", duration: 1967 }
+        ]
       },
       {
         name: "Cumbia Cheta",
-        songs: ["Se Canso y Bailó", "Sin Pijama", "Me Niego"]
+        songs: [
+          { name: "Se Canso y Bailó", duration: 3736 },
+          { name: "Sin Pijama", duration: 3626 },
+          { name: "Me Niego", duration: 4838 }
+        ]
       },
       {
         name: "De Fiesta",
-        songs: ["Mi Cama", "X", "1,2,3"]
+        songs: [
+          { name: "Mi Cama", duration: 3788 },
+          { name: "X", duration: 2535 },
+          { name: "1,2,3", duration: 2443 }
+        ]
       }
     ]
   }
@@ -36,7 +52,7 @@ class PlaylistCounter extends Component {
         className="aggregate"
         style={{ ...defaultStyle, width: "40%", display: "inline-block" }}
       >
-        <h2>{this.props.playlists && this.props.playlists.length} playilsts</h2>
+        <h2>{this.props.playlists.length} playilsts</h2>
       </div>
     );
   }
@@ -44,12 +60,24 @@ class PlaylistCounter extends Component {
 
 class HoursCounter extends Component {
   render() {
+    // we get all the songs in one list
+    // songs is the acumulator starting array
+    const allSongs = this.props.playlists.reduce((songs, eachPlaylist) => {
+      // eachPlaylist is serverData.user.playlist array object item
+      // { name: 'Top 50 Uruguay', songs: [{name: 'Vaina Loca', duration: 1234}]}
+      return songs.concat(eachPlaylist.songs);
+    }, []);
+
+    const totalDuration = allSongs.reduce((sum, song) => {
+      return sum + song.duration;
+    }, 0);
+
     return (
       <div
         className="aggregate"
         style={{ ...defaultStyle, width: "40%", display: "inline-block" }}
       >
-        <h2>{this.props.playlists && this.props.playlists.length} Hours</h2>
+        <h2>{Math.floor(totalDuration / 60)} Hours </h2>
       </div>
     );
   }
