@@ -100,7 +100,7 @@ class Playlist extends Component {
     return (
       <div style={{ ...defaultStyle, display: "inline-block", width: "25%" }}>
         <img src="" alt="" />
-        <h3>Playlist Name</h3>
+        <h3> {this.props.playlist.name} </h3>
         <ul>
           <li>Song 1</li>
           <li>Song 2</li>
@@ -127,6 +127,7 @@ class App extends Component {
   render() {
     return (
       <div className="App">
+        {/* // Conditional Rendering */}
         {this.state.serverData.user ? (
           <div>
             <h1 style={{ ...defaultStyle, fontSize: "54px" }}>
@@ -137,10 +138,11 @@ class App extends Component {
             <PlaylistCounter playlists={this.state.serverData.user.playlists} />
             <HoursCounter playlists={this.state.serverData.user.playlists} />
             <Filter />
-            <Playlist />
-            <Playlist />
-            <Playlist />
-            <Playlist />
+            {
+              this.state.serverData.user.playlists.map( (playlist) => {
+                return <Playlist playlist={playlist} />
+              })
+            }
           </div>
         ) : (
           <h1 style={defaultStyle}>Loading... </h1>
