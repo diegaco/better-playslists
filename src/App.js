@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import "./App.css";
+import queryString from "query-string";
 
 const defaultStyle = {
   color: "#fff"
@@ -122,11 +123,24 @@ class App extends Component {
   };
 
   componentDidMount() {
-    setTimeout(() => {
-      this.setState({
-        serverData: fakeServerData
-      });
-    }, 1000);
+    const urlParsed = queryString.parse(window.location.search);
+    const accessToken = urlParsed.access_token;
+
+    fetch("https://api.spotify.com/v1/me", {
+      headers: {
+        Authorization: "Bearer " + accessToken
+      }
+    })
+      .then(res => res.json())
+      .then(data =>
+        this.setState({
+          serverData: {
+            user: {
+              name: data.display_name
+            }
+          }
+        })
+      );
   }
 
   render() {
@@ -158,7 +172,17 @@ class App extends Component {
             })}
           </div>
         ) : (
-          <h1 style={defaultStyle}>Loading... </h1>
+          <button
+            onClick={() => (window.location = "http://localhost:8888/login")}
+            style={{
+              padding: "15px 30px",
+              fontSize: "16px",
+              textTransform: "uppercase",
+              fontWeight: "bold"
+            }}
+          >
+            Sign In with Spotify
+          </button>
         )}
       </div>
     );
