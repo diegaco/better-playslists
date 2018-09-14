@@ -6,46 +6,6 @@ const defaultStyle = {
   color: "#fff"
 };
 
-const fakeServerData = {
-  user: {
-    name: "Diego",
-    playlists: [
-      {
-        name: "Top 50 Uruguay",
-        songs: [
-          { name: "Vaina Loca", duration: 1345 },
-          { name: "Cuando Te Besé", duration: 2345 },
-          { name: "No Es Justo", duration: 3456 }
-        ]
-      },
-      {
-        name: "Rock Nacional Argentino",
-        songs: [
-          { name: "Juguetes Perdidos", duration: 2534 },
-          { name: "Mirenla", duration: 4025 },
-          { name: "Persiana Americana", duration: 1967 }
-        ]
-      },
-      {
-        name: "Cumbia Cheta",
-        songs: [
-          { name: "Se Canso y Bailó", duration: 3736 },
-          { name: "Sin Pijama", duration: 3626 },
-          { name: "Me Niego", duration: 4838 }
-        ]
-      },
-      {
-        name: "De Fiesta",
-        songs: [
-          { name: "Mi Cama", duration: 3788 },
-          { name: "X", duration: 2535 },
-          { name: "1,2,3", duration: 2443 }
-        ]
-      }
-    ]
-  }
-};
-
 class PlaylistCounter extends Component {
   render() {
     return (
@@ -104,7 +64,7 @@ class Playlist extends Component {
     const { playlist } = this.props;
     return (
       <div style={{ ...defaultStyle, display: "inline-block", width: "25%" }}>
-        <img src="" alt="" />
+        <img src={playlist.imageUrl} alt="" />
         <h3> {playlist.name} </h3>
         <ul>
           {playlist.songs.map(song => {
@@ -134,31 +94,47 @@ class App extends Component {
       .then(res => res.json())
       .then(data =>
         this.setState({
-          serverData: {
-            user: {
-              name: data.display_name
-            }
+          user: {
+            name: data.display_name
           }
         })
       );
+
+    fetch("https://api.spotify.com/v1/me/playlists", {
+      headers: {
+        Authorization: "Bearer " + accessToken
+      }
+    })
+      .then(res => res.json())
+      .then(data => {
+        this.setState({
+          playlists: data.items.map(item => ({
+            name: item.name,
+            imageUrl: item.images[0].url,
+            songs: []
+          }))
+        });
+      })
+      .catch(err => {
+        console.log(err);
+      });
   }
 
   render() {
-    const playlistsToRender = this.state.serverData.user
-      ? this.state.serverData.user.playlists.filter(playlist => {
-          return playlist.name
-            .toLowerCase()
-            .includes(this.state.filterString.toLowerCase());
-        })
-      : [];
-
+    const playlistsToRender =
+      this.state.user && this.state.playlists
+        ? this.state.playlists.filter(playlist => {
+            return playlist.name
+              .toLowerCase()
+              .includes(this.state.filterString.toLowerCase());
+          })
+        : [];
     return (
       <div className="App">
-        {/* // Conditional Rendering */}
-        {this.state.serverData.user ? (
+        {this.state.user ? (
           <div>
             <h1 style={{ ...defaultStyle, fontSize: "54px" }}>
-              {this.state.serverData.user.name}
+              {this.state.user.name}
               's PlayLists
             </h1>
 
