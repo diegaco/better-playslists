@@ -64,7 +64,7 @@ class Playlist extends Component {
     const { playlist } = this.props;
     return (
       <div style={{ ...defaultStyle, display: "inline-block", width: "25%" }}>
-        <img src={playlist.imageUrl} alt="" />
+        <img src={playlist.imageUrl} alt="" style={{ maxWidth: "160px" }} />
         <h3> {playlist.name} </h3>
         <ul>
           {playlist.songs.map(song => {
@@ -92,13 +92,15 @@ class App extends Component {
       }
     })
       .then(res => res.json())
-      .then(data =>
-        this.setState({
-          user: {
-            name: data.display_name
-          }
-        })
-      );
+      .then(data => {
+        if (data.display_name) {
+          this.setState({
+            user: {
+              name: data.display_name
+            }
+          });
+        }
+      });
 
     fetch("https://api.spotify.com/v1/me/playlists", {
       headers: {
@@ -107,13 +109,15 @@ class App extends Component {
     })
       .then(res => res.json())
       .then(data => {
-        this.setState({
-          playlists: data.items.map(item => ({
-            name: item.name,
-            imageUrl: item.images[0].url,
-            songs: []
-          }))
-        });
+        if (data.items) {
+          this.setState({
+            playlists: data.items.map(item => ({
+              name: item.name,
+              imageUrl: item.images[0].url,
+              songs: []
+            }))
+          });
+        }
       })
       .catch(err => {
         console.log(err);
@@ -143,8 +147,8 @@ class App extends Component {
             <Filter
               onTextChange={text => this.setState({ filterString: text })}
             />
-            {playlistsToRender.map(playlist => {
-              return <Playlist playlist={playlist} />;
+            {playlistsToRender.map((playlist, index) => {
+              return <Playlist key={index} playlist={playlist} />;
             })}
           </div>
         ) : (
