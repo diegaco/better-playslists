@@ -64,7 +64,7 @@ class Playlist extends Component {
     const { playlist } = this.props;
     return (
       <div style={{ ...defaultStyle, display: "inline-block", width: "25%" }}>
-        <img src={playlist.imageUrl} alt="" style={{ maxWidth: "160px" }} />
+        <img src={playlist.imageUrl} alt="" />
         <h3> {playlist.name} </h3>
         <ul>
           {playlist.songs.map(song => {
@@ -113,7 +113,7 @@ class App extends Component {
           this.setState({
             playlists: data.items.map(item => ({
               name: item.name,
-              imageUrl: item.images[0].url,
+              imageUrl: item.images.find(image => image.width == 60).url,
               songs: []
             }))
           });
