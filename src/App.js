@@ -108,13 +108,40 @@ class App extends Component {
       }
     })
       .then(res => res.json())
-      .then(data => {
+      .then(playlistData => {
+        let playlists = playlistData.items;
+        let trackDataPromises = playlists.map(playlist => {
+          let responsePromise = fetch(playlist.tracks.href, {
+            headers: {
+              Authorization: "Bearer " + accessToken
+            }
+          });
+          let trackDataPromise = responsePromise.then(res => res.json());
+          return trackDataPromise;
+        });
+        let allTrackDataPromises = Promise.all(trackDataPromises);
+        let playlistsPromise = allTrackDataPromises.then(trackDatas => {
+          trackDatas.forEach((trackData, i) => {
+            playlists[i].trackDatas = trackData.items
+              .map(item => item.track)
+              .map(trackData => ({
+                name: trackData.name,
+                duration: trackData.duration_ms / 1000
+              }));
+          });
+          return playlists;
+        });
+        return playlistsPromise;
+      })
+      .then(playlists => {
         this.setState({
-          playlists: data.items.map(item => ({
-            name: item.name,
-            imageUrl: item.images.find(image => image.width == 60).url,
-            songs: []
-          }))
+          playlists: playlists.map(item => {
+            return {
+              name: item.name,
+              imageUrl: item.images.find(image => image.width == 60).url,
+              songs: item.trackDatas.slice(0, 3)
+            };
+          })
         });
       })
       .catch(err => {
