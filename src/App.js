@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import "./App.css";
-import queryString from "query-string";
+import qs from "qs";
 
 const defaultStyle = {
   color: "#fff"
@@ -64,7 +64,7 @@ class Playlist extends Component {
     const { playlist } = this.props;
     return (
       <div style={{ ...defaultStyle, display: "inline-block", width: "25%" }}>
-        <img src={playlist.imageUrl} alt="" />
+        <img src={playlist.imageUrl} alt={playlist.name} />
         <h3> {playlist.name} </h3>
         <ul>
           {playlist.songs.map(song => {
@@ -83,8 +83,8 @@ class App extends Component {
   };
 
   componentDidMount() {
-    const urlParsed = queryString.parse(window.location.search);
-    const accessToken = urlParsed.access_token;
+    const urlParsed = qs.parse(window.location.search);
+    const accessToken = urlParsed["?access_token"];
 
     fetch("https://api.spotify.com/v1/me", {
       headers: {
