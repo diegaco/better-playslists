@@ -154,7 +154,7 @@ class App extends Component {
             onClick={() => {
               window.location = window.location.href.includes("localhost")
                 ? "http://localhost:8888/login"
-                : "https://better-playlists-diego.herokuapp.com/login";
+                : "https://better-playlists-backend-diego.herokuapp.com/login";
             }}
             style={{
               padding: "15px 30px",
