@@ -86,6 +86,8 @@ class App extends Component {
     const urlParsed = qs.parse(window.location.search);
     const accessToken = urlParsed["?access_token"];
 
+    if (!accessToken) return;
+
     fetch("https://api.spotify.com/v1/me", {
       headers: {
         Authorization: "Bearer " + accessToken
@@ -93,13 +95,11 @@ class App extends Component {
     })
       .then(res => res.json())
       .then(data => {
-        if (data.display_name) {
-          this.setState({
-            user: {
-              name: data.display_name
-            }
-          });
-        }
+        this.setState({
+          user: {
+            name: data.display_name
+          }
+        });
       });
 
     fetch("https://api.spotify.com/v1/me/playlists", {
@@ -109,15 +109,13 @@ class App extends Component {
     })
       .then(res => res.json())
       .then(data => {
-        if (data.items) {
-          this.setState({
-            playlists: data.items.map(item => ({
-              name: item.name,
-              imageUrl: item.images.find(image => image.width == 60).url,
-              songs: []
-            }))
-          });
-        }
+        this.setState({
+          playlists: data.items.map(item => ({
+            name: item.name,
+            imageUrl: item.images.find(image => image.width == 60).url,
+            songs: []
+          }))
+        });
       })
       .catch(err => {
         console.log(err);
