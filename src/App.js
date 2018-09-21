@@ -120,8 +120,8 @@ class App extends Component {
           return trackDataPromise;
         });
         let allTrackDataPromises = Promise.all(trackDataPromises);
-        let playlistsPromise = allTrackDataPromises.then(trackDatas => {
-          trackDatas.forEach((trackData, i) => {
+        let playlistsPromise = allTrackDataPromises.then(tracksDatas => {
+          tracksDatas.forEach((trackData, i) => {
             playlists[i].trackDatas = trackData.items
               .map(item => item.track)
               .map(trackData => ({
@@ -153,9 +153,15 @@ class App extends Component {
     const playlistsToRender =
       this.state.user && this.state.playlists
         ? this.state.playlists.filter(playlist => {
-            return playlist.name
+            let matchesPlaylist = playlist.name
               .toLowerCase()
               .includes(this.state.filterString.toLowerCase());
+            let matchesSongs = playlist.songs.find(song =>
+              song.name
+                .toLowerCase()
+                .includes(this.state.filterString.toLowerCase())
+            );
+            return matchesPlaylist || matchesSongs;
           })
         : [];
     return (
