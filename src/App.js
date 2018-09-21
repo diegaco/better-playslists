@@ -1,18 +1,27 @@
 import React, { Component } from "react";
+import "reset-css";
 import "./App.css";
 import qs from "qs";
 
 const defaultStyle = {
-  color: "#fff"
+  color: "#fff",
+  fontFamily: "Helvetica Neue, Helvetica"
+};
+
+const counterStyle = {
+  ...defaultStyle,
+  width: "40%",
+  display: "inline-block",
+  marginBottom: "20px",
+  fontSize: "20px",
+  lineHeight: "30px"
 };
 
 class PlaylistCounter extends Component {
   render() {
+    let playlistCounterStyle = counterStyle;
     return (
-      <div
-        className="aggregate"
-        style={{ ...defaultStyle, width: "40%", display: "inline-block" }}
-      >
+      <div className="aggregate" style={playlistCounterStyle}>
         <h2>{this.props.playlists.length} playilsts</h2>
       </div>
     );
@@ -33,11 +42,17 @@ class HoursCounter extends Component {
       return sum + song.duration;
     }, 0);
 
+    let totalDurationHours = Math.floor(totalDuration / 60);
+
+    let isTooLow = totalDurationHours < 10;
+
+    let hoursCounter = {
+      ...counterStyle,
+      color: isTooLow ? "red" : "white",
+      fontWeight: isTooLow ? "bold" : "normal"
+    };
     return (
-      <div
-        className="aggregate"
-        style={{ ...defaultStyle, width: "40%", display: "inline-block" }}
-      >
+      <div className="aggregate" style={hoursCounter}>
         <h2>{Math.floor(totalDuration / 60)} Hours </h2>
       </div>
     );
@@ -52,6 +67,12 @@ class Filter extends Component {
         <input
           type="text"
           onKeyUp={evt => this.props.onTextChange(evt.target.value)}
+          style={{
+            ...defaultStyle,
+            color: "black",
+            fontSize: "20px",
+            padding: "10px"
+          }}
         />
         Filter
       </div>
@@ -63,12 +84,29 @@ class Playlist extends Component {
   render() {
     const { playlist } = this.props;
     return (
-      <div style={{ ...defaultStyle, display: "inline-block", width: "25%" }}>
+      <div
+        style={{
+          ...defaultStyle,
+          display: "inline-block",
+          width: "25%",
+          padding: "10px",
+          backgroundColor: this.props.index % 2 ? "#c0c0c0" : "#808080"
+        }}
+      >
         <img src={playlist.imageUrl} alt={playlist.name} />
         <h3> {playlist.name} </h3>
-        <ul>
+        <ul
+          style={{
+            marginTop: "10px",
+            fontWeight: "bold"
+          }}
+        >
           {playlist.songs.map(song => {
-            return <li key={song.name}>{song.name}</li>;
+            return (
+              <li style={{ paddingTop: "2px" }} key={song.name}>
+                {song.name}
+              </li>
+            );
           })}
         </ul>
       </div>
@@ -179,7 +217,7 @@ class App extends Component {
               onTextChange={text => this.setState({ filterString: text })}
             />
             {playlistsToRender.map((playlist, index) => {
-              return <Playlist key={index} playlist={playlist} />;
+              return <Playlist key={index} index={index} playlist={playlist} />;
             })}
           </div>
         ) : (
